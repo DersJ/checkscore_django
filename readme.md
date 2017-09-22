@@ -1,0 +1,13 @@
+certifi==2017.7.27.1
+chardet==3.0.4
+Django==1.11.5
+django-tables2==1.11.0
+idna==2.6
+oauthlib==2.0.4
+pkg-resources==0.0.0
+pytz==2017.2
+requests==2.18.4
+requests-oauthlib==0.8.0
+six==1.11.0
+tweepy==3.5.0
+urllib3==1.22
