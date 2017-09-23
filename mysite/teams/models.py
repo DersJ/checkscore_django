@@ -21,12 +21,15 @@ def addTeams(teams):
 
 def teamslist():
 	#return pickle.load(open('./teams/teams.p', 'rb'))
-	truck = Team(name="Truck Stop", city="Washington, D.C.", division='Division.OPEN', twitterHandle="truckstopulti")
-	bravo = Team(name="Jonny Bravo", city="Denver, CO", division='Division.OPEN', twitterHandle="bravoultimate")
-	ring = Team(name="Ring of Fire", city="Raleigh, N.C.", division='Division.OPEN', twitterHandle="ringultimate")
-	scandal = Team(name="Scandal", city="Washington, D.C.", division='Division.WOMENS', twitterHandle="scandalultimate")
+	truck = Team(name="Truck Stop", city="Washington, D.C.", division='Division.OPEN', twitterHandle="truckstopulti", twitterLink="http://www.twitter.com/truckstopulti/")
+	bravo = Team(name="Jonny Bravo", city="Denver, CO", division='Division.OPEN', twitterHandle="bravoultimate", twitterLink="http://www.twitter.com/bravoultimate/")
+	ring = Team(name="Ring of Fire", city="Raleigh, N.C.", division='Division.OPEN', twitterHandle="ringultimate", twitterLink="http://www.twitter.com/ringultimate/")
+	scandal = Team(name="Scandal", city="Washington, D.C.", division='Division.WOMENS', twitterHandle="scandalultimate", twitterLink="http://www.twitter.com/scandalultimate/")
 
-	return [truck, bravo, ring, scandal]
+	truck.save()
+	bravo.save()
+	ring.save()
+	scandal.save()
 
 
 class Division(Enum):
@@ -44,6 +47,8 @@ class Team(models.Model):
 	city = models.CharField(max_length=50)
 	division = models.CharField(max_length=50)
 	twitterHandle = models.CharField(max_length=50)
+	twitterLink = models.URLField(max_length=200, default='http://www.twitter.com')
+
 
 	def __unicode__(self):
 		return self.name

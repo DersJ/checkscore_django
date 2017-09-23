@@ -11,7 +11,7 @@ def index(request):
 def contact(request):
 	return render(request, 'teams/basic.html', {'content': ['Truck stop is a team from washington dc', 'they are attending nationals in sarasota fl.']})
 
-def teamlist(request):
+def teamlist(request, *args, **kwargs):
 	table = TeamTable(Team.objects.all())
 	table.exclude = ('id')
 	RequestConfig(request).configure(table)
