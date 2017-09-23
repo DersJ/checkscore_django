@@ -3,7 +3,7 @@ from django_tables2.utils import A
 from .models import Team
 
 class TeamTable(tables.Table):
-	twitterLink = tables.TemplateColumn('<b> {{  record.twitterLink }} </b>')
+	twitter = tables.TemplateColumn('<a href="{{  record.twitterLink }}" target="_blank"> {{record.twitterHandle}} </a>')
 	
 	class Meta:
 		model = Team
