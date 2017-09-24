@@ -1,9 +1,9 @@
 from django.conf.urls import url, include
-from . import views
+from teams import views
+from teams.models import Team
 
 urlpatterns = [
-    url(r'^$', views.index, name='index'),
-    url(r'^contact/', views.contact, name='contact'),
-    url(r'^teamlist/', views.teamlist, name='teamlist'),
+    url(r'^$', views.teamlist, name='teamlist'),
+    url(r'^(?P<pk>\w+)/$', views.TeamDetailView.as_view())
 
 ]

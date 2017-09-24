@@ -21,10 +21,10 @@ def addTeams(teams):
 
 def teamslist():
 	#return pickle.load(open('./teams/teams.p', 'rb'))
-	truck = Team(name="Truck Stop", city="Washington, D.C.", division='Division.OPEN', twitterHandle="truckstopulti", twitterLink="http://www.twitter.com/truckstopulti/")
-	bravo = Team(name="Jonny Bravo", city="Denver, CO", division='Division.OPEN', twitterHandle="bravoultimate", twitterLink="http://www.twitter.com/bravoultimate/")
-	ring = Team(name="Ring of Fire", city="Raleigh, N.C.", division='Division.OPEN', twitterHandle="ringultimate", twitterLink="http://www.twitter.com/ringultimate/")
-	scandal = Team(name="Scandal", city="Washington, D.C.", division='Division.WOMENS', twitterHandle="scandalultimate", twitterLink="http://www.twitter.com/scandalultimate/")
+	truck = Team(name="Truck Stop", city="Washington, D.C.", division=Team.OPEN, twitterHandle="truckstopulti", twitterLink="http://www.twitter.com/truckstopulti/")
+	bravo = Team(name="Jonny Bravo", city="Denver, CO", division=Team.OPEN, twitterHandle="bravoultimate", twitterLink="http://www.twitter.com/bravoultimate/")
+	ring = Team(name="Ring of Fire", city="Raleigh, N.C.", division=Team.OPEN, twitterHandle="ringultimate", twitterLink="http://www.twitter.com/ringultimate/")
+	scandal = Team(name="Scandal", city="Washington, D.C.", division=Team.WOMENS, twitterHandle="scandalultimate", twitterLink="http://www.twitter.com/scandalultimate/")
 
 	truck.save()
 	bravo.save()
@@ -43,14 +43,34 @@ class Division(Enum):
 	YOUTHWOMENS = "Youth Womens"
 
 class Team(models.Model):
+	OPEN = 'O'
+	MIXED = 'X'
+	WOMENS = 'W'
+	COLLEGEOPEN = 'CO'
+	COLLEGEWOMENS = 'CW'
+	YOUTHOPEN = 'YO'
+	YOUTHMIXED = 'YX'
+	YOUTHWOMENS = 'YW'
+
+	DIVISION_CHOICES = (
+    ('O', 'Open'),
+    ('X', 'Mixed'),
+    ('W', 'Womens'),
+    ('CO', 'College Open'),
+    ('CW', 'College Open'),
+    ('YO', 'Youth Open'),
+    ('YX', 'Youth Mixed'),
+    ('YW', 'Youth Womens'),)
+
 	name = models.CharField(max_length=50)
 	city = models.CharField(max_length=50)
-	division = models.CharField(max_length=50)
-	twitterHandle = models.CharField(max_length=50)
+	division = models.CharField(max_length=20, choices=DIVISION_CHOICES)
+	twitterHandle = models.CharField(max_length=50, null=True)
 	twitterLink = models.URLField(max_length=200, default='http://www.twitter.com')
+	
 
 
-	def __unicode__(self):
+	def __str__(self):
 		return self.name
 
 	def printStats(self):
