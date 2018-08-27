@@ -42,6 +42,8 @@ class Division(Enum):
 	YOUTHMIXED = "Youth Mixed"
 	YOUTHWOMENS = "Youth Womens"
 
+
+
 class Team(models.Model):
 	OPEN = 'O'
 	MIXED = 'X'
@@ -75,3 +77,26 @@ class Team(models.Model):
 
 	def printStats(self):
 		print(self.name+ " is from " + self.city + " and plays in the " + self.division.value.lower() + " division.")
+
+class Roster(models.Model):
+	year = models.IntegerField(default=0)
+	team = models.ForeignKey(Team, on_delete=models.CASCADE)
+	def __str__(self):
+		return self.team + " " + self.year
+
+#Players relate to teams and games through Rosters in a many to many relationship
+class Player(models.Model):
+	first_name=models.CharField(max_length=50)
+	last_name=models.CharField(max_length=50)
+
+	rosters = models.ManyToManyField(Roster)
+	career_goals=models.IntegerField(default=0)
+	career_assists=models.IntegerField(default=0)
+	career_blocks=models.IntegerField(default=0)
+	#current_team = models.ForeignKey(Team, on_delete=models.CASCADE) to implement later
+
+	def __str__(self):
+		return self.first_name+" "+self.last_name
+
+class Game(models.Model):
+	pass
