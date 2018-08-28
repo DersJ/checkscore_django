@@ -78,25 +78,41 @@ class Team(models.Model):
 	def printStats(self):
 		print(self.name+ " is from " + self.city + " and plays in the " + self.division.value.lower() + " division.")
 
-class Roster(models.Model):
-	year = models.IntegerField(default=0)
-	team = models.ForeignKey(Team, on_delete=models.CASCADE)
-	def __str__(self):
-		return self.team + " " + self.year
-
 #Players relate to teams and games through Rosters in a many to many relationship
 class Player(models.Model):
 	first_name=models.CharField(max_length=50)
 	last_name=models.CharField(max_length=50)
-
-	rosters = models.ManyToManyField(Roster)
 	career_goals=models.IntegerField(default=0)
 	career_assists=models.IntegerField(default=0)
 	career_blocks=models.IntegerField(default=0)
+	
 	#current_team = models.ForeignKey(Team, on_delete=models.CASCADE) to implement later
 
 	def __str__(self):
 		return self.first_name+" "+self.last_name
 
 class Game(models.Model):
-	pass
+	team0_score = models.IntegerField(default=0)
+	team1_score = models.IntegerField(default=0)
+	date_time = models.DateTimeField(auto_now=False, auto_now_add=False)
+
+class Roster(models.Model):
+	year = models.IntegerField(default=0)
+	team = models.ForeignKey(Team, on_delete=models.CASCADE)
+	games = models.ManyToManyField(Game, blank = True, related_name='games')
+	players = models.ManyToManyField(Player, through='RosterMembership')
+
+	def __str__(self):
+		return self.team + " " + self.year
+
+#using extra fields in the many-to-many relationship between roster and player. Roster has members through RosterMembership
+#https://docs.djangoproject.com/en/dev/topics/db/models/#extra-fields-on-many-to-many-relationships
+class RosterMembership(models.Model):
+	player = models.ForeignKey(Player, on_delete=models.CASCADE, related_name='players')
+	roster = models.ForeignKey(Roster, on_delete=models.CASCADE, related_name='teams')
+	number = models.IntegerField(default=0)
+
+
+class Tournament(models.Model):
+	games = models.ManyToManyField(Game)
+	teams = models.ManyToManyField(Team)
