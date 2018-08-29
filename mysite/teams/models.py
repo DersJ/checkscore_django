@@ -91,26 +91,31 @@ class Player(models.Model):
 	def __str__(self):
 		return self.first_name+" "+self.last_name
 
-class Game(models.Model):
-	team0_score = models.IntegerField(default=0)
-	team1_score = models.IntegerField(default=0)
-	date_time = models.DateTimeField(auto_now=False, auto_now_add=False)
 
 class Roster(models.Model):
 	year = models.IntegerField(default=0)
 	team = models.ForeignKey(Team, on_delete=models.CASCADE)
-	games = models.ManyToManyField(Game, blank = True, related_name='games')
+	#games = models.ManyToManyField(Game, blank = True, related_name='games')
 	players = models.ManyToManyField(Player, through='RosterMembership')
 
 	def __str__(self):
 		return self.team + " " + self.year
 
+
+class Game(models.Model):
+	date_time = models.DateTimeField(auto_now=False, auto_now_add=False)
+	rosters = models.ManyToManyField(Roster, through='GameMembership')
+
 #using extra fields in the many-to-many relationship between roster and player. Roster has members through RosterMembership
 #https://docs.djangoproject.com/en/dev/topics/db/models/#extra-fields-on-many-to-many-relationships
 class RosterMembership(models.Model):
-	player = models.ForeignKey(Player, on_delete=models.CASCADE, related_name='players')
-	roster = models.ForeignKey(Roster, on_delete=models.CASCADE, related_name='teams')
+	player = models.ForeignKey(Player, on_delete=models.CASCADE)
+	roster = models.ForeignKey(Roster, on_delete=models.CASCADE)
 	number = models.IntegerField(default=0)
+
+class GameMembership(models.Model):
+	roster = models.ForeignKey(Roster, on_delete=models.CASCADE)
+	game = models.ForeignKey(Game, on_delete=models.CASCADE)
 
 
 class Tournament(models.Model):
