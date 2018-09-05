@@ -69,6 +69,7 @@ class Team(models.Model):
 	division = models.CharField(max_length=20, choices=DIVISION_CHOICES)
 	twitterHandle = models.CharField(max_length=50, null=True)
 	twitterLink = models.URLField(max_length=200, default='http://www.twitter.com')
+	updated = models.DateTimeField(auto_now=True)
 	
 
 
@@ -85,6 +86,7 @@ class Player(models.Model):
 	career_goals=models.IntegerField(default=0)
 	career_assists=models.IntegerField(default=0)
 	career_blocks=models.IntegerField(default=0)
+	updated = models.DateTimeField(auto_now=True)
 	
 	#current_team = models.ForeignKey(Team, on_delete=models.CASCADE) to implement later
 
@@ -97,9 +99,10 @@ class Roster(models.Model):
 	team = models.ForeignKey(Team, on_delete=models.CASCADE)
 	#games = models.ManyToManyField(Game, blank = True, related_name='games')
 	players = models.ManyToManyField(Player, through='RosterMembership')
+	updated = models.DateTimeField(auto_now=True)
 
 	def __str__(self):
-		return self.team + " " + self.year
+		return self.team.name + " " + str(self.year)
 
 
 class Game(models.Model):
