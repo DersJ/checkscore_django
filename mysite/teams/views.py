@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django_tables2 import RequestConfig
 from teams.models import *
 from teams.tables import TeamTable
@@ -13,5 +13,15 @@ def teamlist(request, *args, **kwargs):
 class TeamDetailView(DetailView):
 	queryset = Team.objects.all()
 
+def rosterDetailView(request, id):
+	instance = get_object_or_404(Roster, id=id)
+	queryset = RosterMembership.objects.filter(roster=instance)
+
+	context = {
+		"roster": instance,
+		"rm_list": queryset,
+		"title": "Roster Detail"
+	}
+	return render(request, 'teams/roster_detail.html', context)
 
 

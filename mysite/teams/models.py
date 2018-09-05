@@ -45,15 +45,6 @@ class Division(Enum):
 
 
 class Team(models.Model):
-	OPEN = 'O'
-	MIXED = 'X'
-	WOMENS = 'W'
-	COLLEGEOPEN = 'CO'
-	COLLEGEWOMENS = 'CW'
-	YOUTHOPEN = 'YO'
-	YOUTHMIXED = 'YX'
-	YOUTHWOMENS = 'YW'
-
 	DIVISION_CHOICES = (
     ('O', 'Open'),
     ('X', 'Mixed'),
@@ -67,7 +58,8 @@ class Team(models.Model):
 	name = models.CharField(max_length=50)
 	city = models.CharField(max_length=50)
 	division = models.CharField(max_length=20, choices=DIVISION_CHOICES)
-	rosters = models.ManyToManyField('Roster')
+	#logo = models.FileField(null=True, blank=True)
+	rosters = models.ManyToManyField('Roster', blank=True)
 	twitterHandle = models.CharField(max_length=50, null=True)
 	twitterLink = models.URLField(max_length=200, default='http://www.twitter.com')
 	updated = models.DateTimeField(auto_now=True)
@@ -81,26 +73,30 @@ class Team(models.Model):
 		print(self.name+ " is from " + self.city + " and plays in the " + self.division.value.lower() + " division.")
 
 #Players relate to teams and games through Rosters in a many to many relationship
-class Player(models.Model):
+
+
+class Person(models.Model):
 	first_name=models.CharField(max_length=50)
 	last_name=models.CharField(max_length=50)
-	career_goals=models.IntegerField(default=0)
-	career_assists=models.IntegerField(default=0)
-	career_blocks=models.IntegerField(default=0)
 	updated = models.DateTimeField(auto_now=True)
-	
-	#current_team = models.ForeignKey(Team, on_delete=models.CASCADE) to implement later
 
 	def __str__(self):
 		return self.first_name+" "+self.last_name
 
+class Player(Person):
+	career_goals=models.IntegerField(default=0)
+	career_assists=models.IntegerField(default=0)
+	career_blocks=models.IntegerField(default=0)
+	#current_team = models.ForeignKey(Team, on_delete=models.CASCADE) to implement later
+	
 
 class Roster(models.Model):
-	year = models.IntegerField(default=0)
+	year = models.IntegerField(default=2018)
 	associated_team = models.ForeignKey(Team, on_delete=models.CASCADE)
 	#games = models.ManyToManyField(Game, blank = True, related_name='games')
-	players = models.ManyToManyField(Player, through='RosterMembership')
+	players = models.ManyToManyField(Player, through='RosterMembership', related_name='playsOn')
 	updated = models.DateTimeField(auto_now=True)
+	coaches = models.ManyToManyField(Person, through='RosterCoachMembership', related_name='coaches')
 
 	def __str__(self):
 		return self.associated_team.name + " " + str(self.year)
@@ -118,8 +114,20 @@ class RosterMembership(models.Model):
 	number = models.IntegerField(default=0)
 
 	def __str__(self):
-		return str(self.player)+">"+str(self.roster)
+		return str(self.player)+" plays on "+str(self.roster)
 
+class RosterCoachMembership(models.Model):
+	ROLE_CHOICES = (
+    ('H', 'Head'),
+    ('A', 'Assistant'),)
+
+	coach = models.ForeignKey(Person, on_delete=models.CASCADE)
+	roster = models.ForeignKey(Roster, on_delete=models.CASCADE)
+	role = models.CharField(max_length=20, choices=ROLE_CHOICES)
+	
+
+	def __str__(self):
+		return str(self.coach)+" coaches "+str(self.roster)
 
 class GameMembership(models.Model):
 	roster = models.ForeignKey(Roster, on_delete=models.CASCADE)

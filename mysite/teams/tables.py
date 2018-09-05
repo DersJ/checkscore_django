@@ -4,7 +4,7 @@ from .models import Team
 
 class TeamTable(tables.Table):
 	name = tables.TemplateColumn('<a href="/teams/{{  record.id }}/"> {{record.name}} </a>')
-	twitter = tables.TemplateColumn('<a href="{{  record.twitterLink }}" target="_blank"> {{record.twitterHandle}} </a>')
+	twitterHandle = tables.TemplateColumn('<a href="{{  record.twitterLink }}" target="_blank"> {{record.twitterHandle}} </a>')
 	
 	class Meta:
 		model = Team

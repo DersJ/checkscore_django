@@ -1,12 +1,26 @@
 {% extends "teams/header.html" %}
-
+{% load staticfiles %}
 
 
 {% block content %}
+<div class="row">
+	<div class="col-sm-9">
 
 <h2>{{team.name}}</h2>
 <h6>{{team.city}}</h6>
 
-<p>{{team.name}} plays in the USA Ultimate {{ team.division }} division. 
+<p>{{team.name}} plays in the USA Ultimate {{ team.division }} division. </p>
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam vel molestie metus. Nullam a auctor nunc. Donec ornare lacinia est vel fringilla. In sit amet leo eget risus mattis luctus a in velit. Morbi aliquet dolor eu nibh vehicula volutpat. Duis egestas erat quis dolor euismod, at convallis erat efficitur. In non ullamcorper arcu, sed ultricies ipsum. Vestibulum posuere vel justo luctus accumsan. Vivamus arcu sem, porttitor ac molestie a, aliquam a lorem. Aliquam urna ligula, placerat quis eleifend sit amet, fringilla vitae justo. Suspendisse potenti. Cras ut leo ut tellus blandit blandit. Sed placerat lectus enim. Vivamus consequat lorem suscipit nunc ullamcorper elementum. Aenean pharetra est eget ornare dictum. Phasellus nec tortor eget felis dictum imperdiet.
 
+Sed et ligula eget felis feugiat aliquet. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam pulvinar, purus vel varius mollis, sem purus molestie tortor, ut tempus massa metus eu lectus. Nunc sed dictum elit. Sed ligula sapien, rutrum at volutpat ac, mollis vitae ante. Etiam ac enim eu ante euismod faucibus. Proin finibus porta mauris, quis faucibus quam sagittis et. Nam id lorem non libero convallis pulvinar. Suspendisse lorem diam, condimentum id ante a, lobortis ornare nunc. Pellentesque eget magna nisi. Aliquam sit amet neque a sem sodales euismod. Fusce augue nulla, sollicitudin pulvinar gravida quis, scelerisque non arcu. In tincidunt vehicula lobortis. Pellentesque accumsan posuere elementum. Mauris mattis eleifend tellus sit amet fermentum.</p>
+	</div>
+	<div class="col-sm-3">
+		<div class="card">
+			<img class="card-img-top" src="{% static 'img/default.jpg' %}">
+			<div class="card-body">
+				Some text in the card body.
+			</div>
+		</div>
+	</div>
+</div>
 {% endblock %}	
