@@ -13,7 +13,10 @@ def scrapePoolsPage(soup):
 	numPools = len(pools)
 	teams = {}
 	
-	print(len(pools))
+	print(len(pools) + ' pools')
+	for p in pools:
+		teamlinks = p.find_all('a')
+		print(teamlinks[0])
 
 
 	#print(soup.get_text())
