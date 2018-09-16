@@ -69,8 +69,8 @@ class Team(models.Model):
 	def __str__(self):
 		return self.name
 
-	def printStats(self):
-		print(self.name+ " is from " + self.city + " and plays in the " + self.division.value.lower() + " division.")
+	#def printStats(self):
+	#	print(self.name+ " is from " + self.city + " and plays in the " + self.division.value.lower() + " division.")
 
 #Players relate to teams and games through Rosters in a many to many relationship
 
