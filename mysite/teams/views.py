@@ -1,4 +1,6 @@
 from django.shortcuts import render, get_object_or_404, render_to_response
+from django.http import HttpResponse, HttpResponseRedirect
+from django.contrib import messages
 from django_tables2 import RequestConfig
 from teams.models import *
 from teams.tables import TeamTable
@@ -32,14 +34,24 @@ def rosterDetailView(request, id):
 class ScraperView(FormView):
 	template_name = 'teams/scraper.html'
 	form_class = ScraperInputForm
-	success_url = '/success/'
+	success_url = '/teams/scraper/results/'
 
 	def form_valid(self, form):
 		form.scrape_data()
+		messages.success(self.request, 'Web scraped successfully')
 		return super().form_valid(form)
+	def form_invalid(self,form):
+		messages.error(self.request, 'Error: Url not valid')
+		print("form_invalid")
+		return super().form_invalid(form)
 
 	# def get(self, request):
 	# 	context = {
 	# 		"name": "Truck Stop",
 	# 	}
 	# 	return render(request, 'teams/scraper.html', context)
+class ScraperResults(View):
+	def get(self, request):
+		context = {}
+		return render(request, 'teams/scraper_results.html', context)
+

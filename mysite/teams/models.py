@@ -137,3 +137,5 @@ class GameMembership(models.Model):
 class Tournament(models.Model):
 	games = models.ManyToManyField(Game)
 	teams = models.ManyToManyField(Team)
+
+
