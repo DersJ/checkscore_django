@@ -17,4 +17,7 @@ class ScraperInputForm(forms.Form):
 	def scrape_data(self):
 		
 		url = self.cleaned_data['url']
-		print(Scraper.scrapePoolsPage(url))
+		return Scraper.scrapePoolsPage(url)
+
+class ScraperTeamResultsForm(forms.Form):
+	name = forms.CharField()

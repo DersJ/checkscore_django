@@ -31,19 +31,38 @@ def rosterDetailView(request, id):
 	return render(request, 'teams/roster_detail.html', context)
 
 
-class ScraperView(FormView):
+class ScraperView(View):
 	template_name = 'teams/scraper.html'
-	form_class = ScraperInputForm
 	success_url = '/teams/scraper/results/'
 
-	def form_valid(self, form):
-		form.scrape_data()
-		messages.success(self.request, 'Web scraped successfully')
-		return super().form_valid(form)
-	def form_invalid(self,form):
-		messages.error(self.request, 'Error: Url not valid')
-		print("form_invalid")
-		return super().form_invalid(form)
+	def render(self, request):
+		return render(request, 'teams/scraper.html', {'form': self.form})
+
+	def post(self, request):
+		self.form = ScraperInputForm(request.POST)
+		if self.form.is_valid():
+			results = self.form.scrape_data()
+			context = {
+				"results": results
+				}
+			return render(request, 'teams/scraper_results.html', context)
+		return self.render(request)
+
+	def get(self, request):
+		self.form=ScraperInputForm()
+		return self.render(request)
+
+	# def form_valid(self, form):
+	# 	results = form.scrape_data()
+	# 	messages.success(self.request, 'Web scraped successfully')
+	# 	context = {
+	# 		"results": results
+	# 	}
+	# 	return render(request, 'teams/scraper_results.html', context)
+	# def form_invalid(self,form):
+	# 	messages.error(self.request, 'Error: Url not valid')
+	# 	print("form_invalid")
+	# 	return super().form_invalid(form)
 
 	# def get(self, request):
 	# 	context = {
