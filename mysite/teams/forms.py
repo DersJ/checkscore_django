@@ -19,5 +19,5 @@ class ScraperInputForm(forms.Form):
 		url = self.cleaned_data['url']
 		return Scraper.scrapePoolsPage(url)
 
-class ScraperTeamResultsForm(forms.Form):
-	name = forms.CharField()
+class ScraperResultsForm(forms.Form):
+	save = forms.Booleanield()

@@ -29,7 +29,8 @@ class Scraper():
 
 		return results
 	def scrapePoolsPage(url):
-		soup = BeautifulSoup(requests.get(url).text, 'html.parser')
+		#soup = BeautifulSoup(requests.get(url).text, 'html.parser')
+		soup = BeautifulSoup(open('./tctMens.html'), 'html.parser')
 		pools = soup.find_all('div', 'pool')
 		teams = []
 		results =[]
@@ -44,16 +45,16 @@ class Scraper():
 				seed = int(team_str.split('(')[1].split(')')[0])
 				name = team_str.split('>')[1].split('(')[0][:-1]
 				teams.append([name, seed, link])
-		for team in teams:
-			team_url = 'https://play.usaultimate.org' + team[2]
-			print(team[0])
-			team_page_info = Scraper.scrapeTeamEventPage(team_url)
-			team_info = [team_page_info['City'], team_page_info['Gender Division'], team_page_info['Competition Level'], team_page_info['Twitter']]
-			results.append([team[0], team_info])
-		# team_url = 'https://play.usaultimate.org' + teams[1][2]
-		# team_page_info = Scraper.scrapeTeamEventPage(team_url)
-		# team_info = [team_page_info['City'], team_page_info['Gender Division'], team_page_info['Competition Level'], team_page_info['Twitter']]
-		# results.append([teams[1][0], team_info])
+		# for team in teams:
+		# 	team_url = 'https://play.usaultimate.org' + team[2]
+		# 	print(team[0])
+		# 	team_page_info = Scraper.scrapeTeamEventPage(team_url)
+		# 	team_info = [team_page_info['City'], team_page_info['Gender Division'], team_page_info['Competition Level'], team_page_info['Twitter']]
+		# 	results.append([team[0], team_info])
+		team_url = 'https://play.usaultimate.org' + teams[1][2]
+		team_page_info = Scraper.scrapeTeamEventPage(team_url)
+		team_info = [team_page_info['City'], team_page_info['Gender Division'], team_page_info['Competition Level'], team_page_info['Twitter']]
+		results.append([teams[1][0], team_info])
 		print(results)
 		return results
 
