@@ -6,9 +6,10 @@
 
 <h2>Scraper form</h2>
 <form method='POST' action='' enctype=''>{% csrf_token %}
-	{{form.as_p}}
 
-<input type="submit" name="Scrape" value='Scrape'>
+<p><label for="id_url">Url</label> <input type="text" class="form-control" name="url" value="https://play.usaultimate.org/events/TCT-Pro-Championships-2018/schedule/Men/Club-Men/" required id="id_url"></p>
+
+<input type="submit" class="btn btn-primary" name="Scrape" value='Scrape'>
 </form>
 
 

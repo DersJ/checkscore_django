@@ -38,27 +38,30 @@ class ScraperView(View):
 	def render(self, request, context):
 		if(context.get('matched') or context.get('unmatched')):
 			num_results=context.get('num_results')
-			self.form=ScraperResultsForm(num_results=num_results)
-			context['form'] = self.form
+
 			return render(request, 'teams/scraper_results.html', context)
 		return render(request, 'teams/scraper.html', {'form': self.form})
 
 	def post(self, request):
-		print('request.POST:')
-		print(request.POST)
 		if request.POST.get('url'):
 			self.form = ScraperInputForm(request.POST)
 			if self.form.is_valid():
 				results = self.form.scrape_data()
 				unmatched = results[0]
 				matched = results[1]
-				print(results[1])
+	
 				num_results = results[2]
+				for i in range(len(unmatched)):
+					unmatched[i][1].append('<input type="checkbox" class="form-check-input" name="save{0}" id="id_save{0}">'.format(i))
+				
+				self.form=ScraperResultsForm(num_results=num_results)
 				context = {
 					"unmatched": unmatched,
 					"matched": matched,
 					"num_results": num_results,
+					'form': self.form
 					}
+
 				#return render(request, 'teams/scraper_results.html', context)
 				return self.render(request, context)
 		elif request.POST.get('save_all'):
@@ -71,14 +74,12 @@ class ScraperView(View):
 			self.form = ScraperResultsForm(data=request.POST, num_results=num_results)
 			if self.form.is_valid():
 				save_all = self.form.cleaned_data['save_all']
-				print(save_all)
 				return HttpResponseRedirect('/teams/scraper/success/')
-		context = {}
+		context = {"form": self.form}
 		return self.render(request, context)
 
 	def get(self, request):
 		self.form=ScraperInputForm(initial={"url": "https://play.usaultimate.org/events/TCT-Pro-Championships-2018/schedule/Men/Club-Men/"})
-
 		context = {}
 		return self.render(request, context)
 

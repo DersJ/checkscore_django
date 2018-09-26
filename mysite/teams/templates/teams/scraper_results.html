@@ -7,6 +7,7 @@
 <h2>Scaper Results</h2>
 
 <h4>Unmatched Results</h4>
+<form method='POST' action='' enctype=''>{% csrf_token %}
 <table class="table">
   <thead>
     <tr>
@@ -15,6 +16,7 @@
       <th scope="col">Gender Div</th>
       <th scope="col">Competition Div</th>
       <th scope="col">Twitter</th>
+      <th scope="col">Save?</th>
   </tr>
 </thead>
 <tbody>
@@ -25,7 +27,8 @@
         <td>{{ result.1.0 }}</td>
         <td>{{ result.1.1 }}</td>
         <td>{{ result.1.2 }}</td>
-        <td>{{ result.1.3 }}</td>   
+        <td>{{ result.1.3 }}</td> 
+        <td>{{ result.1.4 | safe}}</td>  
     </tr>
 
 {% endfor %}
@@ -63,10 +66,8 @@
 </tbody>
 </table>
 
-<form method='POST' action='' enctype=''>{% csrf_token %}
-	{{form.as_p}}
-
-<input type="submit" name="Save" value='Save'>
+<input type="checkbox" name="save_all" required id="id_save_all">
+<input type="submit" name="Save" value='Save' class="btn btn-success">
 </form>
 
 {% endblock %}	

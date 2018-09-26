@@ -17,7 +17,7 @@ class ScraperInputForm(forms.Form):
 	def scrape_data(self):
 		
 		url = self.cleaned_data['url']
-		return Scraper.scrapePoolsPage(url)
+		return Scraper.scrapePoolsPageLocal(url)
 
 class ScraperResultsForm(forms.Form):
 	def __init__(self, num_results, *args, **kwargs):
