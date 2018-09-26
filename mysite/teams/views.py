@@ -7,7 +7,7 @@ from teams.tables import TeamTable
 from django.views.generic import DetailView, TemplateView
 from django.views.generic.edit import FormView
 from django.views import View
-from teams.forms import ScraperInputForm
+from teams.forms import ScraperInputForm, ScraperResultsForm
 
 
 def teamlist(request, *args, **kwargs):
@@ -36,9 +36,11 @@ class ScraperView(View):
 	success_url = '/teams/scraper/results/'
 
 	def render(self, request, context):
-		print('request method: ' + request.method)
-		if(context.get('results')):
-			print("hello world")
+		if(context.get('matched') or context.get('unmatched')):
+			num_results=context.get('num_results')
+			self.form=ScraperResultsForm(num_results=num_results)
+			context['form'] = self.form
+			return render(request, 'teams/scraper_results.html', context)
 		return render(request, 'teams/scraper.html', {'form': self.form})
 
 	def post(self, request):
@@ -48,17 +50,34 @@ class ScraperView(View):
 			self.form = ScraperInputForm(request.POST)
 			if self.form.is_valid():
 				results = self.form.scrape_data()
+				unmatched = results[0]
+				matched = results[1]
+				print(results[1])
+				num_results = results[2]
 				context = {
-					"results": results
+					"unmatched": unmatched,
+					"matched": matched,
+					"num_results": num_results,
 					}
 				#return render(request, 'teams/scraper_results.html', context)
-				print(context)
 				return self.render(request, context)
+		elif request.POST.get('save_all'):
+			num_results=0
+			while(True):
+				if(request.POST.get("save"+str(num_results))):
+					num_results +=1
+				else:
+					break
+			self.form = ScraperResultsForm(data=request.POST, num_results=num_results)
+			if self.form.is_valid():
+				save_all = self.form.cleaned_data['save_all']
+				print(save_all)
+				return HttpResponseRedirect('/teams/scraper/success/')
 		context = {}
 		return self.render(request, context)
 
 	def get(self, request):
-		self.form=ScraperInputForm()
+		self.form=ScraperInputForm(initial={"url": "https://play.usaultimate.org/events/TCT-Pro-Championships-2018/schedule/Men/Club-Men/"})
 
 		context = {}
 		return self.render(request, context)

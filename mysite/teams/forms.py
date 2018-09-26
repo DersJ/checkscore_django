@@ -20,4 +20,9 @@ class ScraperInputForm(forms.Form):
 		return Scraper.scrapePoolsPage(url)
 
 class ScraperResultsForm(forms.Form):
-	save = forms.Booleanield()
+	def __init__(self, num_results, *args, **kwargs):
+		super(ScraperResultsForm, self).__init__(*args, **kwargs)
+		for i in range(num_results):
+			self.fields['save'+str(i)] = forms.BooleanField()
+
+	save_all = forms.BooleanField()
