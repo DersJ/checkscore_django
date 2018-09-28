@@ -17,12 +17,12 @@ class ScraperInputForm(forms.Form):
 	def scrape_data(self):
 		
 		url = self.cleaned_data['url']
-		return Scraper.scrapePoolsPageLocal(url)
+		return Scraper.scrapePoolsPage(url)
 
 class ScraperResultsForm(forms.Form):
+	
 	def __init__(self, num_results, *args, **kwargs):
 		super(ScraperResultsForm, self).__init__(*args, **kwargs)
+		#self.results = results
 		for i in range(num_results):
-			self.fields['save'+str(i)] = forms.BooleanField()
-
-	save_all = forms.BooleanField()
+			self.fields['save'+str(i)] = forms.BooleanField(required=False)

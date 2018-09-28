@@ -51,7 +51,8 @@ class Scraper():
 				team_str = str(team)
 				seed = int(team_str.split('(')[1].split(')')[0])
 				name = team_str.split('>')[1].split('(')[0][:-1]
-				teams.append([name, seed, link])
+				if ([name, seed, link] not in teams):
+					teams.append([name, seed, link])
 		for team in teams:
 			team_url = 'https://play.usaultimate.org' + team[2]
 			print(team[0])

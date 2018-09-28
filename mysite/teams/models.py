@@ -50,7 +50,7 @@ class Team(models.Model):
     ('X', 'Mixed'),
     ('W', 'Womens'),
     ('CO', 'College Open'),
-    ('CW', 'College Open'),
+    ('CW', 'College Womens'),
     ('YO', 'Youth Open'),
     ('YX', 'Youth Mixed'),
     ('YW', 'Youth Womens'),)
