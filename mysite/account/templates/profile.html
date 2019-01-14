@@ -1,0 +1,130 @@
+{% extends 'teams/header.html' %}
+
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+
+
+<div class="container">
+	<h1 class="border-bottom mb-5">Profile</h1>
+
+	<div class="row">
+		<div class="col-sm-12 col-lg-4">
+			<div class="card">
+				<div class="card-body">
+					{% if user.name %}
+					<h4 class="card-title">{{user.name}}</h4>
+					<h5 class="card-subtitle mb-2 text-muted">@{{user.username}}</h4>
+
+					{% else %}
+					<h4 class="card-title">@{{user.username}}</h4>
+					{% endif %}
+
+					<p class="card-text">{{user.email}}</p>
+				</div>
+			</div>
+
+		</div>
+		<div class="col-sm-12 col-lg-8">
+			<h2>Your Tournaments</h2>
+
+			<p>Tournaments you have registered are listed below. Once a tournament is locked, you may run the matcher for it to pair teams with hosts.</p>
+
+			<ul class="list-group">
+				{% for tournament in tournaments %}
+				<li class="list-group-item">
+					<div class="row d-flex align-items-center">
+					<div class="col-sm-8">
+					<p class="font-weight-bold mb-1">
+						{{tournament.name}}
+						{% if tournament.is_matched %}
+							<span class="badge badge-success">Matched</span>
+						{% elif tournament.is_locked %}
+							<span class="badge badge-warning">Locked</span>
+						{% else %}
+							<span class="badge badge-secondary">Registering</span>
+						{% endif %}
+					</p>
+
+					{% if tournament.is_matched %}
+						Matches have been generated for this tournament.
+					{% elif tournament.is_locked %}
+						Locked since {{tournament.date_lockout}}.
+					{% else %}
+						Unlocked until {{tournament.date_lockout}}.
+					{% endif %}
+					</div>
+					<div class="col-sm-4 text-right">
+						<button type="button" class="btn btn-sm btn-outline-secondary" data-toggle="modal" data-target="#{{tournament.slug}}modal">Match Status</button>
+					</div>
+				</div>
+				</li>
+				{% endfor %}
+
+			</ul>
+
+			<h2 class="mt-5">Your Teams</h2>
+			<p>
+				The teams you have registered for upcoming tournaments are listed below. Select a team to view more details about its match status.
+			</p>
+
+			<div class="list-group">
+				{% for team in teams %}
+					<a {% if team.hostteammatch %}href="{{ team.hostteammatch.get_absolute_url }}"{% endif %} class="list-group-item list-group-item-action {% if not team.hostteammatch %}disabled{% endif %}">
+						<p class="font-weight-bold mb-1">
+							{{ team.name }}
+							{% if team.hostteammatch %}
+								<span class="badge badge-success">Matched</span>
+							{% elif team.tournament.is_matched %}
+								<span class="badge badge-danger">No Match Found</span>
+							{% else %}
+								<span class="badge badge-secondary">Match Pending</span>
+							{% endif %}
+						</p>
+						<p class="mb-1">
+							Registered for {{ team.tournament }} on {{ team.tournament.date_start }}
+						</p>
+						{% if team.hostteammatch %}
+							<p class="mb-0">
+								Matched with host{{ team.hostteammatch.hosts.count|pluralize }}:
+								{{ team.hostteammatch.hosts.all|join:', ' }}
+							</p>
+						{% endif %}
+					</a>
+				{% endfor %}
+			</div>
+
+			<h2 class="mt-5">Your Host Registrations</h2>
+			<p>
+				All upcoming tournaments that you are registered to host for are listed below. Select a matched hosting entry to view information about the team you are matched with.
+			</p>
+			<div class="list-group">
+				{% for host in hosts %}
+					<a {% if host.match %}href="{{ host.match.get_absolute_url }}"{% endif %} class="list-group-item list-group-item-action {% if not host.match %}disabled{% endif %}">
+						<p class="font-weight-bold mb-1">
+							{{ host.name }}
+							{% if host.match %}
+								<span class="badge badge-success">Matched</span>
+							{% elif host.tournament.is_matched %}
+								<span class="badge badge-warning">No Match</span>
+							{% else %}
+								<span class="badge badge-secondary">Match Pending</span>
+							{% endif %}
+						</p>
+						<p class="mb-1">
+							Hosting for {{ host.tournament }} on {{ host.tournament.date_start }}
+						</p>
+						{% if host.match %}
+							<p class="mb-0">Matched with {{ host.match.team }}</p>
+						{% endif %}
+					</a>
+				{% endfor %}
+			</div>
+
+		</div>
+	</div>
+</div>
+
+
+{% endblock %}
