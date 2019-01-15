@@ -1,4 +1,12 @@
+.hero {
+  background-size: cover;
+  background-position: top center;
+  min-height: 90vh;
+}
 
+.jumbotron--hero {
+  opacity: .8;
+}
 
 a {
 	color: #e74c3c;
@@ -22,14 +30,14 @@ a {
 
 .nav a{
 	font-size: 20pt;
-	font-family: "Anonymous Pro"
+	
 }
 h1 {
     text-align: center;
 	font-size: 130px;
 }
 
-.name-head {
+/*.name-head {
 	width: 150px;
 }
 
@@ -39,8 +47,9 @@ h1 {
 
 .gender-head {
 	width: 125px;
-}
+}*/
 
 .save-button {
 	text-align: right;
 }
+

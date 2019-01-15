@@ -22,7 +22,7 @@ def signup(request):
             return redirect('/')
     else:
         form = SignUpForm()
-    return render(request, 'registration/signup.html', {'form': form})
+    return render(request, 'signup.html', {'form': form})
 
 
 class ProfileView(generic.DetailView):
