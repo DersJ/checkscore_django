@@ -27,8 +27,14 @@
 		</div>
 		<div class="col-sm-12 col-lg-8">
 			<h2>Your Account</h2>
-			<p>Access Level: Scraper Access</p>
-
+			<h4>Access Level:</h4>
+			{% if user.is_staff %}
+			<p>Permissions level: Staff</p>
+			<p>You have access to the web scraper to input new data</p>
+			{% else %}
+			<p>Permissions level: User</p>
+			<p>You do not have access to the web scraper to input new data. Click <a href="#">here</a> to learn more.</p>
+			{% endif %}
 
 		</div>
 	</div>
