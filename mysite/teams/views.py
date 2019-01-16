@@ -13,7 +13,7 @@ import ast
 
 def teamlist(request, *args, **kwargs):
 	table = TeamTable(Team.objects.all())
-	table.exclude = ('id', 'twitterHandle', 'twitterLink')
+	table.exclude = ('id', 'twitterHandle', 'twitterLink', 'bio')
 	RequestConfig(request, paginate={'per_page': 15}).configure(table)
 	return render(request, 'teams/teamslist.html', {'table': table})
 

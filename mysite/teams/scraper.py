@@ -22,7 +22,7 @@ class Scraper():
 		results = {}
 
 		city = teamInfo.find('p', 'team_city')
-		results['City']=Scraper.cleanCityString(city.get_text())
+		results['City']=Scraper.cleanCityString(city.get_text()).split(',')[0]
 
 		dl_list = teamInfo.find_all('dl')
 		for dl in dl_list:

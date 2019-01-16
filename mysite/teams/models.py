@@ -58,6 +58,7 @@ class Team(models.Model):
 	name = models.CharField(max_length=50)
 	city = models.CharField(max_length=50)
 	division = models.CharField(max_length=20, choices=DIVISION_CHOICES)
+	bio = models.TextField(default="No bio yet.")
 	#logo = models.FileField(null=True, blank=True)
 	rosters = models.ManyToManyField('Roster', blank=True)
 	twitterHandle = models.CharField(max_length=50, null=True)
