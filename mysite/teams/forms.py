@@ -7,6 +7,7 @@ from django.utils.translation import ugettext as _
 
 class ScraperInputForm(forms.Form):
 	url = forms.CharField()
+	type_choices = forms.ChoiceField(choices=[("A","A"), ("B","B")])
 	def clean_url(self):
 		val = URLValidator()
 		url = self.cleaned_data['url']
@@ -18,6 +19,7 @@ class ScraperInputForm(forms.Form):
 	def scrape_data(self):
 		
 		url = self.cleaned_data['url']
+		
 		return Scraper.scrapePoolsPage(url)
 
 class ScraperResultsForm(forms.Form):

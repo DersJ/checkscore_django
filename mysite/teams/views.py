@@ -112,6 +112,8 @@ class ScraperView(View):
 		return self.render(request, context)
 
 	def get(self, request):
+		if not request.user.is_authenticated:
+			return redirect('/401/')
 		self.form=ScraperInputForm(initial={"url": "https://play.usaultimate.org/events/TCT-Pro-Championships-2018/schedule/Men/Club-Men/"})
 		context = {}
 		return self.render(request, context)
