@@ -1,5 +1,6 @@
 from django import forms
 from .scraper import Scraper
+from .models import Team
 from django.core.validators import URLValidator
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext as _
@@ -26,3 +27,13 @@ class ScraperResultsForm(forms.Form):
 		#self.results = results
 		for i in range(num_results):
 			self.fields['save'+str(i)] = forms.BooleanField(required=False)
+
+class TeamForm(forms.ModelForm):
+	class Meta:
+		model = Team
+		fields = [
+			"name",
+			"city",
+			"bio",
+			"twitterLink",
+		]

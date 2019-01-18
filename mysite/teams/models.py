@@ -1,36 +1,8 @@
 from django.db import models
 from enum import Enum
+from django.urls import reverse
 #from ultimodels import *
 # Create your models here.
-import pickle
-
-""" DEFAULTS:
-	truck = Team("Truck Stop", "Washington, D.C.", Division.OPEN, "truckstopulti")
-    bravo = Team("Jonny Bravo", "Denver, CO", Division.OPEN, "bravoultimate")
-    ring = Team("Ring of Fire", "Raleigh, N.C.", Division.OPEN, "ringultimate")
-    scandal = Team("Scandal", "Washington, D.C.", Division.WOMENS, "scandalultimate")"""
-
-def addTeams(teams):
-	old_teams = pickle.load(open('teams.p', 'rb'))
-
-	for i in teams:
-		old_teams.append(i)
-
-	pickle.dump(old_teams, open('teams.p', 'wb'))
-
-
-def teamslist():
-	#return pickle.load(open('./teams/teams.p', 'rb'))
-	truck = Team(name="Truck Stop", city="Washington, D.C.", division=Team.OPEN, twitterHandle="truckstopulti", twitterLink="http://www.twitter.com/truckstopulti/")
-	bravo = Team(name="Jonny Bravo", city="Denver, CO", division=Team.OPEN, twitterHandle="bravoultimate", twitterLink="http://www.twitter.com/bravoultimate/")
-	ring = Team(name="Ring of Fire", city="Raleigh, N.C.", division=Team.OPEN, twitterHandle="ringultimate", twitterLink="http://www.twitter.com/ringultimate/")
-	scandal = Team(name="Scandal", city="Washington, D.C.", division=Team.WOMENS, twitterHandle="scandalultimate", twitterLink="http://www.twitter.com/scandalultimate/")
-
-	truck.save()
-	bravo.save()
-	ring.save()
-	scandal.save()
-
 
 class Division(Enum):
 	OPEN = "Open"
@@ -57,7 +29,7 @@ class Team(models.Model):
 
 	name = models.CharField(max_length=50)
 	city = models.CharField(max_length=50)
-	division = models.CharField(max_length=20, choices=DIVISION_CHOICES)
+	division = models.CharField(max_length=20, choices=DIVISION_CHOICES, blank=False)
 	bio = models.TextField(default="No bio yet.")
 	#logo = models.FileField(null=True, blank=True)
 	rosters = models.ManyToManyField('Roster', blank=True)
@@ -65,6 +37,8 @@ class Team(models.Model):
 	twitterLink = models.URLField(max_length=200, default='http://www.twitter.com')
 	updated = models.DateTimeField(auto_now=True)
 	
+	def get_absolute_url(self):
+		return reverse("team_detail", kwargs={"pk": self.pk})
 
 
 	def __str__(self):

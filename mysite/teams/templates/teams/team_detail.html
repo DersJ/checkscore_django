@@ -28,6 +28,9 @@
 				</ul>
 			</div>
 		</div>
+		{% if user.is_staff %}
+		<a class="btn btn-secondary" href="edit/" role="button">Edit Team</a>
+		{% endif %}
 	</div>
 </div>
 </div>

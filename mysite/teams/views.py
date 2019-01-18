@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404, render_to_response
+from django.shortcuts import render, get_object_or_404, render_to_response, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib import messages
 from django_tables2 import RequestConfig
@@ -7,15 +7,48 @@ from teams.tables import TeamTable
 from django.views.generic import DetailView, TemplateView
 from django.views.generic.edit import FormView
 from django.views import View
-from teams.forms import ScraperInputForm, ScraperResultsForm
+from teams.forms import ScraperInputForm, ScraperResultsForm, TeamForm
 from django.core.exceptions import ValidationError
+from django.db.models import Q
 import ast
 
+
 def teamlist(request, *args, **kwargs):
-	table = TeamTable(Team.objects.all())
+	if('search' in request.GET):
+		search_term = request.GET['search']
+		print(search_term)
+		queryset = Team.objects.filter(Q(name__icontains=search_term)|Q(city__icontains=search_term))
+		table=TeamTable(queryset)
+		title = "Search Results"
+	else:
+		table = TeamTable(Team.objects.all())
+		title = "Teams List"
 	table.exclude = ('id', 'twitterHandle', 'twitterLink', 'bio')
 	RequestConfig(request, paginate={'per_page': 15}).configure(table)
-	return render(request, 'teams/teamslist.html', {'table': table})
+	return render(request, 'teams/teamslist.html', {'table': table, 'title': title})
+
+def teamEdit(request, pk=None):
+	if not request.user.is_authenticated:
+		return redirect('/401/')
+	instance = get_object_or_404(Team, pk=pk)
+	if (request.method == 'POST'):
+		form = TeamForm(request.POST, request.FILES or None)
+		if(form.is_valid):
+
+			instance = form.save(commit=False)
+			instance.save()
+			messages.success(request, "Successfully Updated")
+			return HttpResponseRedirect(instance.get_absolute_url())
+		else:
+			messages.error(request, "Error")
+	else:
+		form = TeamForm(instance=instance)
+
+	context = {
+		"team": instance,
+		"form": form,
+	}
+	return render(request, "teams/team_form.html", context)
 
 class TeamDetailView(DetailView):
 	queryset = Team.objects.all()
