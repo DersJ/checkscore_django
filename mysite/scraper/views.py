@@ -1,6 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, render_to_response, redirect
 from .forms import ScraperQueryForm
 from django.views import View
+from .scraper import Scraper
 
 # Create your views here.
 class ScraperView(View):
@@ -20,3 +21,9 @@ class ScraperView(View):
 		self.form=ScraperQueryForm()
 		context = {}
 		return self.render(request, context)
+
+	def post(self, request):
+		self.form = ScraperQueryForm(request.POST)
+		if self.form.is_valid():
+			results = self.form.scrape_data()
+			return redirect('/')
