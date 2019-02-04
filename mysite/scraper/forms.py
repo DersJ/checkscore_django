@@ -21,4 +21,10 @@ class ScraperQueryForm(forms.ModelForm):
 		return url
 	def scrape_data(self):
 		url = self.cleaned_data['url']
-		return Scraper.scrapePoolsPage(url)
+		pageType = self.cleaned_data['pageType']
+		if(pageType == "PP"):
+			return Scraper.scrapePoolsPage(url)
+		elif(pageType == "TP"):
+			return Scraper.scrapeTeamPage(url)
+		elif(pageType == "ET"):
+			return Scraper.scrapeEventTeamPage(url)
