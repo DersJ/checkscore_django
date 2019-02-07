@@ -6,4 +6,5 @@ from scraper import views
 
 urlpatterns = [
 	url(r'^$', views.ScraperView.as_view(), name='scraper'),
+	path('results/', views.ScraperQueryResultsView.as_view(), name='results')
 ]

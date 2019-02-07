@@ -4,7 +4,20 @@ from bs4 import BeautifulSoup
 from django.conf import settings
 import requests, string
 
-class Scraper():
+class Scraper:
+	def __init__(self, query, *args, **kwargs):
+		self.query = query
+	
+	def scrape(self):
+		url = self.query.url
+		pageType = self.query.pageType
+		if(pageType == "PP"):
+			return self.scrapePoolsPage(url)
+		elif(pageType == "TP"):
+			return self.scrapeTeamPage(url)
+		elif(pageType == "ET"):
+			return self.scrapeEventTeamPage(url)
+
 	def cleanCityString(citystring):
 		return citystring.replace('\n', '').replace('\t','').replace('\r', '')
 	def teamInDb(teamName, team_info):
@@ -15,7 +28,7 @@ class Scraper():
 		else:
 			return (False, "")
 
-	def scrapePoolsPage(url):
+	def scrapePoolsPage(self, url):
 		soup = BeautifulSoup(requests.get(url).text, 'html.parser')	
 		pools = soup.find_all('div', 'pool')
 		teams = []
@@ -25,14 +38,17 @@ class Scraper():
 
 		for p in pools:
 			teamlinks = p.find_all('a')
+			s = 0
 			for team in teamlinks:
+				s+=1
 				link = team['href']
 				team_str = str(team)
 				seed = int(team_str.split('(')[1].split(')')[0])
 				name = team_str.split('>')[1].split('(')[0][:-1]
 				if ([name, seed, link] not in teams):
-					
 					teams.append([name, seed, link])
+					model = PoolPageTeamInfo(name=name, seed=seed, poolSeed=s, eventTeamURL=link, query=self.query)
+					model.save()
 		print(teams)
 
 

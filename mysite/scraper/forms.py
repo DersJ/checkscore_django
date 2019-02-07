@@ -12,6 +12,12 @@ class ScraperQueryForm(forms.ModelForm):
 			"url",
 			"pageType",
 		]
+		exclude = ('user',)
+
+	def save(self, user, commit=True):
+		self.instance.user = user
+		return super().save(commit=commit)
+
 	def clean_url(self):
 		val = URLValidator()
 		url = self.cleaned_data['url']
@@ -19,6 +25,7 @@ class ScraperQueryForm(forms.ModelForm):
 		if(url.split('//')[1][:20] != 'play.usaultimate.org'):
 			raise ValidationError(_('Url not usaultimate.org'), code='not_usau')
 		return url
+		
 	def scrape_data(self):
 		url = self.cleaned_data['url']
 		pageType = self.cleaned_data['pageType']
