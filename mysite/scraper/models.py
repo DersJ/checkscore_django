@@ -3,6 +3,8 @@ from mysite import settings
 
 # Create your models here.
 class ScraperQuery(models.Model):
+	class Meta:
+		ordering = ['-created']
 	TYPE_CHOICES = (
 		('PP', "Pools Page"),
 		('TP', "Team Page"),
@@ -24,7 +26,7 @@ class PoolPageTeamInfo(models.Model):
 	poolSeed = models.IntegerField(default=0)
 	eventTeamURL = models.URLField()
 	created = models.DateTimeField(auto_now_add=True)
-	query = models.ForeignKey(ScraperQuery, on_delete=models.CASCADE)
+	query = models.ForeignKey(ScraperQuery, on_delete=models.CASCADE, related_name='teams')
 
 	def __str__(self):
 		return '%s seeded %s' % (self.name, self.seed)

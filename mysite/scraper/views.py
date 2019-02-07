@@ -44,7 +44,8 @@ class ScraperQueryResultsView(View):
 		if not request.user.is_authenticated:
 			return redirect('/401/')
 		queries = request.user.scraper_queries.all()
+		
 		context = {
-			"queries": queries
+			"queries": queries,
 		}
 		return self.render(request, context)
