@@ -8,28 +8,33 @@
 
 <div class="container my-5">
 	<div class="row">
-		<div class="col-sm-10">
-<h2>Results</h2>
+		<div class="col">
+			<h2>Your Results</h2>
+			{% for q in queries %}
+			<div class="query card my-4">
 
+				<div class="card-header">
+					<h5 class="">{{q.get_pageType_display }} Query at {{q.created}} </h5>
+				</div>
+				<div class="card-body">
+				<small><a href="{{q.url}}" target="blank">{{q.url}}</a></small>
+				<p class="card-text">
+				{% if q.teams.all %}
+					{% for t in q.teams.all %}
+					{{t.name}},
+					{%endfor%}
+					</p>
+					<a href="/scraper/results/{{q.pk}}" class="btn btn-outline-primary">View Details</a>
+				{% else %}
+				No teams found.</p>
+				{% endif %}
+				</div>
+			</div>
+			
+			{% endfor %}
 
-{% for q in queries %}
-Scraper Query at {{q.created}}
-<small><a href="{{q.url}}" target="blank">{{q.url}}</a></small>
-
-{% if q.teams.all %}
-<ul>
-{% for t in q.teams.all %}
-<li>{{t.name}}</li>
-{%endfor%}
-</ul>
-{% else %}
-<p>No matches</p>
-{% endif %}
-<hr>
-{% endfor %}
-
-</div>
-</div>
+		</div>
+	</div>
 </div>
 
 {% endblock %}	

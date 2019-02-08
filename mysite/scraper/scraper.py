@@ -20,13 +20,7 @@ class Scraper:
 
 	def cleanCityString(citystring):
 		return citystring.replace('\n', '').replace('\t','').replace('\r', '')
-	def teamInDb(teamName, team_info):
-		if Team.objects.filter(name__contains=teamName):
-			match = Team.objects.filter(name__contains=teamName)[0]
-			match_url = "/teams/%d/" % match.id
-			return (True, match_url)
-		else:
-			return (False, "")
+	
 
 	def scrapePoolsPage(self, url):
 		soup = BeautifulSoup(requests.get(url).text, 'html.parser')	
@@ -47,7 +41,8 @@ class Scraper:
 				name = team_str.split('>')[1].split('(')[0][:-1]
 				if ([name, seed, link] not in teams):
 					teams.append([name, seed, link])
-					model = PoolPageTeamInfo(name=name, seed=seed, poolSeed=s, eventTeamURL=link, query=self.query)
+					match_url = teamInDb(name)
+					model = PoolPageTeamInfo(name=name, match_url=match_url, seed=seed, poolSeed=s, eventTeamURL="https://play.usaultimate.org"+link, query=self.query)
 					model.save()
 		print(teams)
 
@@ -104,3 +99,11 @@ class Scraper:
 		twitterHandle = twitterLink.split('/')[-1]
 		print(city_str + ' ' + competitionLevel_str + ' ' + genderDivision_str + ' ' + twitterLink)
 		return (city_str, competitionLevel_str, genderDivision_str, twitterLink)
+
+def teamInDb(teamName):
+		if Team.objects.filter(name__contains=teamName):
+			match = Team.objects.filter(name__contains=teamName)[0]
+			match_url = "/teams/%d/" % match.id
+			return match_url
+		else:
+			return ""

@@ -31,7 +31,7 @@ class ScraperView(View):
 			scraper.scrape()
 
 			#results = self.form.scrape_data()
-			return redirect('/')
+			return redirect('/scraper/results/')
 		context = {}
 		return self.render(request, context)
 
@@ -44,8 +44,21 @@ class ScraperQueryResultsView(View):
 		if not request.user.is_authenticated:
 			return redirect('/401/')
 		queries = request.user.scraper_queries.all()
+
+
 		
 		context = {
 			"queries": queries,
 		}
 		return self.render(request, context)
+
+class ResultDetailView(View):
+	def render(self, request, context):
+		return render(request, 'scraper/result_detail.html', context)
+
+	def get_object(self):
+		return get_object_or_404(ScraperQuery, pk=self.kwargs.get('pk'))
+
+	def get(self, request, pk):
+		self.obj = self.get_object()
+		return self.render(request, {"teams": self.obj.teams.all(), "query": self.obj})

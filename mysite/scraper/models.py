@@ -1,5 +1,6 @@
 from django.db import models
 from mysite import settings
+from teams.models import Team
 
 # Create your models here.
 class ScraperQuery(models.Model):
@@ -21,6 +22,7 @@ class ScraperQuery(models.Model):
 		return '%s query at %s' % (self.get_pageType_display(), formatedDate)
 
 class PoolPageTeamInfo(models.Model):
+	match_url = models.CharField(default="", blank=True, max_length=200)
 	name = models.CharField(max_length=200)
 	seed = models.IntegerField()
 	poolSeed = models.IntegerField(default=0)
@@ -31,5 +33,10 @@ class PoolPageTeamInfo(models.Model):
 	def __str__(self):
 		return '%s seeded %s' % (self.name, self.seed)
 
-
-
+	def thisTeamInDb(self):
+		if Team.objects.filter(name__contains=self.name):
+			match = Team.objects.filter(name__contains=self.name)[0]
+			match_url = "/teams/%d/" % match.id
+			return match_url
+		else:
+			return ""
