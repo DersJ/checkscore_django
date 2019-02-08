@@ -73,4 +73,14 @@ def ajax_save_team(request):
 	print(team)
 	return JsonResponse({'saved': True})
 
+
+def ajax_save_all(request):
+	query = get_object_or_404(ScraperQuery, id=request.GET.get('id', None))
+	teams = query.teams.all()
+	for t in teams:
+		if not (t.thisTeamInDb()):
+			results = Scraper.scrapeTeamEventPage(t.eventTeamURL)
+			team = Team(name=t.name, city=results['City'], division=results['Division'], twitterLink=results['Twitter'])
+			team.save()	
+	return JsonResponse({'saved': True})
 #{'City': 'Washington', 'Competition Level': 'Club', 'Gender Division': 'Men', 'Twitter': 'https://twitter.com/truckstopulti'}
