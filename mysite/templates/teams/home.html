@@ -1,6 +1,12 @@
 {% extends "teams/header.html" %}
 {% load static %}
 
+{% block javascript %}
+<script>
+setActive("home");
+</script>
+{% endblock %}
+
 {% block content %}
 <div class="hero" style="">
 	<div class="container py-5">

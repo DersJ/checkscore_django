@@ -3,6 +3,11 @@
 {% load render_table from django_tables2 %}
 {% load static %}
 
+{% block javascript %}
+<script>
+setActive("teams");
+</script>
+{% endblock %}
 
 {% block content %}
 <!-- <head>

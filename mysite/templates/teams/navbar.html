@@ -1,4 +1,4 @@
-<nav class="navbar navbar-dark bg-primary navbar-expand-lg ">
+<nav class="navbar navbar-default  navbar-expand-lg ">
   <a class="navbar-brand" href="/">UltiDB</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
@@ -6,19 +6,19 @@
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+      <li class="nav-item active" id="home">
+        <a class="nav-link"  href="/">Home <span class="sr-only">(current)</span></a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/teams/">Teams</a>
+      <li class="nav-item" id="teams">
+        <a class="nav-link"  href="/teams/">Teams</a>
       </li>
       {% if request.user.is_staff %}
-      <li class="nav-item">
-        <a class="nav-link" href="/scraper/">Scraper</a>
+      <li class="nav-item" id="scraper">
+        <a class="nav-link"  href="/scraper/">Scraper</a>
       </li>
       {% endif %}
 
-      <li class="nav-item dropdown">
+      <li class="nav-item dropdown" id="profile">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Account
         </a>
@@ -32,10 +32,10 @@
           {% endif %}
         </div>
       </li>
-      <li class="nav-item">
+      <li class="nav-item" id="about">
         <a class="nav-link" href="/about/">About</a>
       </li>
-      <li class="nav-item">
+      <li class="nav-item" id="api">
         <a class="nav-link disabled" href="#">API</a>
       </li>
       <li class="nav-item">

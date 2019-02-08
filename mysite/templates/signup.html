@@ -1,6 +1,11 @@
 {% extends 'teams/header.html' %}
 
 {% load crispy_forms_tags %}
+{% block javascript %}
+<script>
+setActive("profile");
+</script>
+{% endblock %}
 
 {% block content %}
 <div class="row my-5">

@@ -11,3 +11,8 @@ $(document).ready( function () {
 
 });
 
+
+function setActive(id){
+	$(".nav-item").removeClass("active");
+	$("#"+id).addClass("active");
+}
