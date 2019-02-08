@@ -79,7 +79,7 @@ class Scraper:
 				results["Gender Division"] = description.get_text()
 			if(descriptor == "Twitter:"):
 				results["Twitter"] = description.find('a').get_text()
-
+		results['Division'] = parseDivision(results['Gender Division'], results['Competition Level'])
 		return results
 
 	def scrapeTeamPage(url):
@@ -107,3 +107,26 @@ def teamInDb(teamName):
 			return match_url
 		else:
 			return ""
+
+def parseDivision(gender, level):
+	if("women" in gender.lower() or "girl" in gender.lower()):
+		if("club" in level.lower()):
+			return "Womens"
+		elif("college" in level.lower()):
+			return "College Womens"
+		elif("youth" in level.lower()):
+			return "Youth Womens"
+	elif("x" in gender.lower()):
+		if("club" in level.lower()):
+			return "Mixed"
+		elif("college" in level.lower()):
+			return "College Mixed"
+		elif("youth" in level.lower()):
+			return "Youth Mixed"
+	elif("men" in gender.lower() or "open" in gender.lower() or "boy" in gender.lower()):
+		if("club" in level.lower()):
+			return "Open"
+		elif("college" in level.lower()):
+			return "College Open"
+		elif("youth" in level.lower()):
+			return "Youth Open"

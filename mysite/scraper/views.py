@@ -1,9 +1,10 @@
 from django.shortcuts import render, get_object_or_404, render_to_response, redirect
 from .forms import ScraperQueryForm
 from django.views import View
+from django.http import JsonResponse
 from .scraper import Scraper
 from .models import *
-
+from teams.models import Team
 # Create your views here.
 class ScraperView(View):
 	template_name = 'scraper/scraper.html'
@@ -62,3 +63,14 @@ class ResultDetailView(View):
 	def get(self, request, pk):
 		self.obj = self.get_object()
 		return self.render(request, {"teams": self.obj.teams.all(), "query": self.obj})
+
+def ajax_save_team(request):
+	poolPageTeamInfo = get_object_or_404(PoolPageTeamInfo, id=request.GET.get('id', None))
+	results = Scraper.scrapeTeamEventPage(poolPageTeamInfo.eventTeamURL)
+	print(results)
+	team = Team(name=poolPageTeamInfo.name, city=results['City'], division=results['Division'], twitterLink=results['Twitter'])
+	team.save()
+	print(team)
+	return JsonResponse({'saved': True})
+
+#{'City': 'Washington', 'Competition Level': 'Club', 'Gender Division': 'Men', 'Twitter': 'https://twitter.com/truckstopulti'}

@@ -2,7 +2,23 @@
 {% load staticfiles %}
 {% load crispy_forms_tags %}
 
-
+{% block javascript %}
+  <script>
+  	function saveTeam(id) {
+	console.log("ajaxing");
+	$.ajax({
+		url: '{% url "ajax-save-team" %}',
+		data: { 'id': id },
+		dataType: 'json',
+		success: function (data) {
+			if (data.saved) {
+				alert("team saved");
+			}
+		}
+	});
+}
+  </script>
+{% endblock %}
 
 {% block content %}
 
@@ -12,16 +28,22 @@
 			<div class="card mb-4">
 				<div class="card-body">
 					<h3 class="card-title">{{query.get_pageType_display }} Query at {{query.created}} </h3>
+					<h6 class="card-subtitle text-muted">Click a row to view more info.</h6>
 				</div>
 				<ul class="list-group list-group-flush">
 					{% for t in teams %}
-					<li class="list-group-item">
+					<li class="list-group-item team">
 					{% if t.thisTeamInDb %}
-						<a href="{{t.thisTeamInDb}}">{{t.name}}</a> <span class="badge badge-warning">matched</span>
+						{{t.name}} <span class="badge badge-warning">matched</span>
+						<p class="url hide"><a href="{{t.eventTeamURL}}" target="blank">{{t.eventTeamURL|truncatechars:40}}</a></p>
+						<a href="{{t.thisTeamInDb}}" class="hide save btn btn-outline-dark">View Matched Team</a>
 					{% else %}
-						{{t.name}} <span class="badge badge-success">No match</span>
+						{{t.name}} <span class="badge badge-dark">No match</span>
+						<p class="url hide"><a href="{{t.eventTeamURL}}"  target="blank">{{t.eventTeamURL|truncatechars:40}}</a></p>
+					
+					<button onclick="saveTeam({{t.id}})" class="hide save btn btn-success">Save This Team Ajax</a>
 					{% endif %}
-					<small>{{t.eventTeamURL}}</small>
+
 					</li>
 					{% endfor %}
 					</ul>
