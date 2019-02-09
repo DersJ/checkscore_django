@@ -28,6 +28,7 @@ class Team(models.Model):
     ('YW', 'Youth Womens'),)
 
 	name = models.CharField(max_length=50)
+	nickname = models.CharField(max_length=50, blank=True)
 	city = models.CharField(max_length=50)
 	division = models.CharField(max_length=20, choices=DIVISION_CHOICES, blank=False)
 	bio = models.TextField(default="No bio yet.")

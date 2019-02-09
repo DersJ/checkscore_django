@@ -65,7 +65,7 @@ class Scraper:
 		soup = BeautifulSoup(requests.get(url).text, 'html.parser')
 		teamInfo = soup.find('div', 'profile_info')
 		results = {}
-
+		
 		city = teamInfo.find('p', 'team_city')
 		results['City']=Scraper.cleanCityString(city.get_text()).split(',')[0]
 
