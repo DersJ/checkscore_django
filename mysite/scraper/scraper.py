@@ -12,11 +12,11 @@ class Scraper:
 		url = self.query.url
 		pageType = self.query.pageType
 		if(pageType == "PP"):
-			return self.scrapePoolsPage(url)
+			self.scrapePoolsPage(url)
 		elif(pageType == "TP"):
-			return self.scrapeTeamPage(url)
+			self.scrapeTeamPage(url)
 		elif(pageType == "ET"):
-			return self.scrapeEventTeamPage(url)
+			self.scrapeTeamEventPage(url)
 
 	def cleanCityString(citystring):
 		return citystring.replace('\n', '').replace('\t','').replace('\r', '')
@@ -60,12 +60,14 @@ class Scraper:
 		# return [unmatched, matched, len(matched)+len(unmatched)]
 
 
-
-	def scrapeTeamEventPage(url):
+	def scrapeTeamEventPage(self, url):
 		soup = BeautifulSoup(requests.get(url).text, 'html.parser')
 		teamInfo = soup.find('div', 'profile_info')
 		results = {}
-		
+		name=teamInfo.select('#CT_Main_0_ltlTeamName')
+		results['Name'] = name[0].get_text()
+		print(results['Name'])
+
 		city = teamInfo.find('p', 'team_city')
 		results['City']=Scraper.cleanCityString(city.get_text()).split(',')[0]
 
@@ -80,6 +82,8 @@ class Scraper:
 			if(descriptor == "Twitter:"):
 				results["Twitter"] = description.find('a').get_text()
 		results['Division'] = parseDivision(results['Gender Division'], results['Competition Level'])
+		instance = TeamPageData(name=results['Name'], city=results['City'], division=results['Division'], twitterLink=results['Twitter'], query=self.query)
+		instance.save()
 		return results
 
 	def scrapeTeamPage(url):

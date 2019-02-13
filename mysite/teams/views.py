@@ -17,13 +17,13 @@ def teamlist(request, *args, **kwargs):
 	if('search' in request.GET):
 		search_term = request.GET['search']
 		print(search_term)
-		queryset = Team.objects.filter(Q(name__icontains=search_term)|Q(city__icontains=search_term))
+		queryset = Team.objects.filter(Q(name__icontains=search_term)|Q(city__icontains=search_term)|Q(nickname__icontains=search_term))
 		table=TeamTable(queryset)
 		title = "Search Results"
 	else:
 		table = TeamTable(Team.objects.all())
 		title = "Teams List"
-	table.exclude = ('id', 'twitterHandle', 'twitterLink', 'bio')
+	table.exclude = ('id', 'twitterHandle', 'twitterLink', 'bio', 'nickname')
 	RequestConfig(request, paginate={'per_page': 15}).configure(table)
 	return render(request, 'teams/teamslist.html', {'table': table, 'title': title})
 
@@ -31,13 +31,13 @@ def teamEdit(request, pk=None):
 	if not request.user.is_authenticated:
 		return redirect('/401/')
 	instance = get_object_or_404(Team, pk=pk)
+	print(instance)
 	if (request.method == 'POST'):
-		form = TeamForm(request.POST, request.FILES or None)
+		form = TeamForm(request.POST, instance=instance)
 		if(form.is_valid):
-
 			instance = form.save(commit=False)
 			instance.save()
-			messages.success(request, "Successfully Updated")
+			messages.success(request, "Successfully updated team")
 			return HttpResponseRedirect(instance.get_absolute_url())
 		else:
 			messages.error(request, "Error")

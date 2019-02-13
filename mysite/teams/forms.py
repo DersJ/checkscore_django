@@ -35,7 +35,9 @@ class TeamForm(forms.ModelForm):
 		model = Team
 		fields = [
 			"name",
+			"nickname",
 			"city",
 			"bio",
 			"twitterLink",
+
 		]

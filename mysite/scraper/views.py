@@ -29,7 +29,8 @@ class ScraperView(View):
 		if self.form.is_valid():
 			query = self.form.save(request.user)
 			scraper = Scraper(query)
-			scraper.scrape()
+			results = scraper.scrape()
+			
 
 			#results = self.form.scrape_data()
 			return redirect('/scraper/results/')
@@ -45,9 +46,6 @@ class ScraperQueryResultsView(View):
 		if not request.user.is_authenticated:
 			return redirect('/401/')
 		queries = request.user.scraper_queries.all()
-
-
-		
 		context = {
 			"queries": queries,
 		}
