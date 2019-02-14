@@ -4,6 +4,22 @@
 {% block javascript %}
 <script>
 setActive("scraper");
+
+function saveTeam(qid, tid) {
+	console.log("ajaxing");
+	$.ajax({
+		url: '{% url "ajax-save-eventteam" %}',
+		data: { 'qid': qid,
+				'tid': tid },
+		dataType: 'json',
+		success: function (data) {
+			if (data.saved) {
+				alert("team saved");
+			}
+		}
+	});
+}
+
 </script>
 {% endblock %}
 
@@ -31,7 +47,13 @@ setActive("scraper");
 					<a href="/scraper/results/{{q.pk}}" class="btn btn-outline-primary">View Details</a>
 				{% elif q.team.all %}
 					{% for t in q.team.all %}
-						Data found for {{t.name}}</p>
+						Data found for {{t.name}} ({{t.nickname}})
+						{% if t.thisTeamInDb %}
+						<span class="badge badge-warning">matched</span></p>
+						{% else %}
+						</p><button onclick="saveTeam({{q.id}}, {{t.id}})" class="save btn btn-outline-success">Save This Team</button>
+						{% endif %}
+
 					{%endfor%}
 				{% else %}
 				No teams found.</p>

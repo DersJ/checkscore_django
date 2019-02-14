@@ -7,7 +7,9 @@
 <div class="row">
 <div class="col-sm-9">
 
-<h2>{{team.name}} {{team.nickname}}</h2>
+<h2>{{team.name}} 
+
+{%if team.nickname%} ({{team.nickname}}) {% endif %}</h2>
 <h6>{{team.city}}</h6>
 
 <p>{{team.name}} plays in the USA Ultimate {{ team.get_division_display }} division. </p>

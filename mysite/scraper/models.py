@@ -44,11 +44,21 @@ class PoolPageTeamInfo(models.Model):
 
 class TeamPageData(models.Model):
 	name = models.CharField(max_length=200)
+	nickname = models.CharField(max_length=200, default="")
 	city = models.CharField(max_length=50)
 	division = models.CharField(max_length=20)
 	twitterLink = models.URLField(max_length=200, default='http://www.twitter.com')
 	created = models.DateTimeField(auto_now_add=True)
 	query = models.ForeignKey(ScraperQuery, on_delete=models.CASCADE, related_name='team')
+
+
+	def thisTeamInDb(self):
+		if Team.objects.filter(name__contains=self.name):
+			match = Team.objects.filter(name__contains=self.name)[0]
+			match_url = "/teams/%d/" % match.id
+			return match_url
+		else:
+			return ""
 
 	def __str__(self):
 		return '%s' % (self.name)

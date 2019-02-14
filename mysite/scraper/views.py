@@ -63,10 +63,13 @@ class ResultDetailView(View):
 		return self.render(request, {"teams": self.obj.teams.all(), "query": self.obj})
 
 def ajax_save_team(request):
-	poolPageTeamInfo = get_object_or_404(PoolPageTeamInfo, id=request.GET.get('id', None))
-	results = Scraper.scrapeTeamEventPage(poolPageTeamInfo.eventTeamURL)
+	query = get_object_or_404(ScraperQuery, id=request.GET.get('qid', None))
+	poolPageTeamInfo = get_object_or_404(PoolPageTeamInfo, id=request.GET.get('tid', None))
+	scraper = Scraper(query)
+	results = scraper.scrapeTeamEventPage(poolPageTeamInfo.eventTeamURL)
+
 	print(results)
-	team = Team(name=poolPageTeamInfo.name, city=results['City'], division=results['Division'], twitterLink=results['Twitter'])
+	team = Team(name=poolPageTeamInfo.name, nickname=results["Nickname"], city=results['City'], division=results['Division'], twitterLink=results['Twitter'])
 	team.save()
 	print(team)
 	return JsonResponse({'saved': True})
@@ -74,11 +77,19 @@ def ajax_save_team(request):
 
 def ajax_save_all(request):
 	query = get_object_or_404(ScraperQuery, id=request.GET.get('id', None))
+	scraper=Scraper(query)
 	teams = query.teams.all()
 	for t in teams:
 		if not (t.thisTeamInDb()):
-			results = Scraper.scrapeTeamEventPage(t.eventTeamURL)
-			team = Team(name=t.name, city=results['City'], division=results['Division'], twitterLink=results['Twitter'])
+			results = scraper.scrapeTeamEventPage(t.eventTeamURL)
+			team = Team(name=t.name, nickname=results["Nickname"], city=results['City'], division=results['Division'], twitterLink=results['Twitter'])
 			team.save()	
 	return JsonResponse({'saved': True})
+
+def ajax_save_eventteam(request):
+	t = get_object_or_404(TeamPageData, id=request.GET.get('tid', None))
+	team = Team(name=t.name, nickname=t.nickname, city=t.city, division=t.division, twitterLink=t.twitterLink)
+	team.save()
+	return JsonResponse({'saved': True})
+
 #{'City': 'Washington', 'Competition Level': 'Club', 'Gender Division': 'Men', 'Twitter': 'https://twitter.com/truckstopulti'}

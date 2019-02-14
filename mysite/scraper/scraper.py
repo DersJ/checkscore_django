@@ -20,7 +20,18 @@ class Scraper:
 
 	def cleanCityString(citystring):
 		return citystring.replace('\n', '').replace('\t','').replace('\r', '')
+
 	
+	def cleanNameString(namestring):
+		name_arr = namestring.split("(")
+		results = {}
+		if (len(name_arr) > 1):
+			results['name'] = name_arr[0].rstrip()
+			results['nickname'] = name_arr[1].rstrip(" )")
+		else:
+			results['name'] = name_arr[0].rstrip()
+		return results
+
 
 	def scrapePoolsPage(self, url):
 		soup = BeautifulSoup(requests.get(url).text, 'html.parser')	
@@ -65,8 +76,10 @@ class Scraper:
 		teamInfo = soup.find('div', 'profile_info')
 		results = {}
 		name=teamInfo.select('#CT_Main_0_ltlTeamName')
-		results['Name'] = name[0].get_text()
-		print(results['Name'])
+		cleaned_name = Scraper.cleanNameString(name[0].get_text())
+
+		results['Name'] = cleaned_name['name']
+		results['Nickname'] = cleaned_name.get('nickname', '')
 
 		city = teamInfo.find('p', 'team_city')
 		results['City']=Scraper.cleanCityString(city.get_text()).split(',')[0]
@@ -82,7 +95,7 @@ class Scraper:
 			if(descriptor == "Twitter:"):
 				results["Twitter"] = description.find('a').get_text()
 		results['Division'] = parseDivision(results['Gender Division'], results['Competition Level'])
-		instance = TeamPageData(name=results['Name'], city=results['City'], division=results['Division'], twitterLink=results['Twitter'], query=self.query)
+		instance = TeamPageData(name=results['Name'], nickname=results['Nickname'], city=results['City'], division=results['Division'], twitterLink=results['Twitter'], query=self.query)
 		instance.save()
 		return results
 
