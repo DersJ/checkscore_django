@@ -50,3 +50,5 @@ class TeamPageData(models.Model):
 	created = models.DateTimeField(auto_now_add=True)
 	query = models.ForeignKey(ScraperQuery, on_delete=models.CASCADE, related_name='team')
 
+	def __str__(self):
+		return '%s' % (self.name)

@@ -29,8 +29,10 @@ setActive("scraper");
 					{%endfor%}
 					</p>
 					<a href="/scraper/results/{{q.pk}}" class="btn btn-outline-primary">View Details</a>
-				{% elif q.team %}
-					{{q.team.name}}
+				{% elif q.team.all %}
+					{% for t in q.team.all %}
+						Data found for {{t.name}}</p>
+					{%endfor%}
 				{% else %}
 				No teams found.</p>
 				{% endif %}
