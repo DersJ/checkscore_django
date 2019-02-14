@@ -1,8 +1,8 @@
-#UltiDB
+UltiDB
 
 UltiDB is a web application for the free and open sharing of data on the sport of ultimate.
 
-##Features:
+Features:
 
 - Team and roster information
 - RESTful API
